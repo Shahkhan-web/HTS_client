@@ -10,6 +10,7 @@ AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
   secretAccessKey: process.env.AWS_PRIVATE_KEY,
 });
+console.log('Aws key',process.env.AWS_ACCESS_KEY)
 
 var s3 = new AWS.S3();
 
@@ -22,8 +23,9 @@ const upload = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
-      const filename = Date.now().toString();
-      cb(null, filename);
+      console.log(file)
+      const filename = file.originalname;
+      cb(null, `certs/${filename}`);
     },
     Body: function (req, file, cb) {
       const base64Data = Buffer.from(
@@ -33,7 +35,7 @@ const upload = multer({
       cb(null, base64Data);
     },
     ContentEncoding: "base64",
-    ContentType: "png/jpeg/jpg",
+    ContentType: "png/jpeg/jpg/pdf",
   }),
 });
 
@@ -70,6 +72,7 @@ const getObject = (key) => {
     logger(new Error(`Could not retrieve file from S3`));
   }
 };
+
 const uploadtos3 = async (body, name) => {
   //configuring parameters
   var params = {
@@ -93,8 +96,31 @@ const uploadtos3 = async (body, name) => {
   } catch (error) {
   }
 };
-module.exports = {
-  // uploader,
+ 
+
+const getcert = (key) => {
+  try {
+    var params = {
+      Bucket: "honey-qr-codes",
+      Key: `certs/${key}`,
+    };
+
+    return s3
+      .getObject(params)
+      .createReadStream()
+      .on("error", (err) => {
+        if (err.code === "AccessDenied") {
+          return `File not found in S3`;
+        } else {
+          return `Could not retrieve file from S3`;
+        }
+      });
+  } catch (err) {
+    logger(new Error(`Could not retrieve file from S3`));
+  }
+}; 
+module.exports = { 
+  getcert,
   uploadImage,
   getObject,
   uploadtos3,
@@ -126,7 +152,7 @@ module.exports = {
 //             Key : "profiles/reqLog.txt"
 //           };
 
-//       const data = await s3.getObject(params).promise();
+//       const data = awkt s3.getObject(params).promise();
 
 //       return data.Body.toString('utf-8');
 //     } catch (e) {

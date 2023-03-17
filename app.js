@@ -11,7 +11,7 @@ const errorHandler = require("./middleware/errorHandler");
 const cookieParser = require("cookie-parser");
 const credentials = require("./middleware/credentials");
 
-const { getObject } = require("./config/s3manager");
+const { getObject,getcert,uploadImage } = require("./config/s3manager");
 
 const PORT = process.env.PORT || 8000;
 
@@ -63,6 +63,20 @@ app.get("/image/:key", function (req, res, next) {
 
   readStream.pipe(res);
 });
+app.get("/cert/:key", function (req, res, next) {
+  const key = req.params.key;
+  const readStream = getcert(key);
+
+  readStream.on("error", (err) => {
+    // handle the error
+    res.status(404).json({ err: `Error retrieving file: Invalid key` });
+    return;
+  });
+
+  readStream.pipe(res);
+});
+
+app.use("/single",uploadImage, (req,res)=>{res.json({"status":"200"})});
 
 app.use("/farmer", require("./routes/farmer"));
 

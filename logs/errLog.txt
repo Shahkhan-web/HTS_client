@@ -1,3 +1,5 @@
 20230309	20:57:05	1639dd38-1b00-482f-ab41-81bf5b325dc7	TypeError: dest.on is not a function
 20230309	20:58:37	e4eb5cbb-0471-419f-9f9d-49c33588340c	TypeError: Cannot read property 'on' of undefined
 20230310	13:37:58	a4af366d-96a5-4324-8b49-a12ac12c7257	TypeError: Cannot read property '0' of undefined
+20230314	19:58:44	9629052f-1869-4c1a-9d15-25f1b813ceb2	Error: Not allowed by CORS
+20230314	19:58:48	1dec30de-c6e6-43e5-8c15-068dfb15f290	Error: Not allowed by CORS
