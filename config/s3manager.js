@@ -9,9 +9,7 @@ require('dotenv').config()
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY,
   secretAccessKey: process.env.AWS_PRIVATE_KEY,
-});
-console.log('Aws key',process.env.AWS_ACCESS_KEY)
-
+}); 
 var s3 = new AWS.S3();
 
 // configure multer and multer-s3

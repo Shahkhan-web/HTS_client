@@ -108,3 +108,6 @@ ALTER TABLE ONLY public.qr_info
 -- PostgreSQL database dump complete
 --
 
+ALTER TABLE quality_inspection
+ADD CONSTRAINT unique_user_id
+UNIQUE (user_id);

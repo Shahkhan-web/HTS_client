@@ -11,7 +11,7 @@ const errorHandler = require("./middleware/errorHandler");
 const cookieParser = require("cookie-parser");
 const credentials = require("./middleware/credentials");
 
-const { getObject,getcert,uploadImage } = require("./config/s3manager");
+const { getObject, getcert, uploadImage } = require("./config/s3manager");
 
 const PORT = process.env.PORT || 8000;
 
@@ -45,6 +45,8 @@ app.use(urlencodedParser);
 //middleware for cookies
 app.use(cookieParser());
 
+app.use(errorHandler);
+
 //serve static files
 app.use("/", express.static(path.join(__dirname, "/public")));
 
@@ -76,7 +78,9 @@ app.get("/cert/:key", function (req, res, next) {
   readStream.pipe(res);
 });
 
-app.use("/single",uploadImage, (req,res)=>{res.json({"status":"200"})});
+app.use("/single", uploadImage, (req, res) => {
+  res.json({ status: "200" });
+});
 
 app.use("/farmer", require("./routes/farmer"));
 
@@ -90,7 +94,5 @@ app.all("*", (req, res) => {
     res.type("txt").send("404 Not Found");
   }
 });
-
-app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
